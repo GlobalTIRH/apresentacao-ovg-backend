@@ -1,0 +1,24 @@
+flask
+Flask[async]
+Flask-Mail
+Flask-Cors
+# flask-socketio
+# gunicorn
+# google
+# google-cloud-bigquery
+# google-cloud-aiplatform
+# google-oauth
+# google-cloud-bigquery-connection
+# google-cloud-bigquery-storage
+# cloud-sql-python-connector[asyncpg]
+numpy
+pandas
+pyarrow
+Werkzeug
+Unidecode
+colorama
+# db-dtypes
+# openai
+python-dotenv
+flasgger
+requests
