@@ -44,7 +44,7 @@ swagger = Swagger(
 # ---------------------------- Rotas
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    # 4. Verifica se o formulário foi enviado (método POST)
+    # Verifica se o formulário foi enviado (método POST)
     if request.method == 'POST':
         nome = request.form.get('nome')
         email = request.form.get('email')
@@ -62,13 +62,13 @@ def home():
             send_email(nome, email, area)
             
             # Envia uma mensagem de sucesso (qualquer categoria que não seja 'error')
-            flash('Cadastro realizado com sucesso! Em breve entraremos em contato.', 'success')
+            flash('Cadastro realizado com sucesso!\nEm breve entraremos em contato.', 'success')
             # Redireciona de volta para a página do formulário para exibir o sucesso
 
             
         return redirect(url_for('home'))
 
-    # 5. Se for um acesso normal (método GET), apenas exibe a página
+    # Se for um acesso normal (método GET), apenas exibe a página
     return render_template('home.html')
 
 
