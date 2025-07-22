@@ -1,7 +1,4 @@
-CMD exec gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 AppFile:app
-
-
-
+def jobs(list_jobs):
     jobs = [
         {
             "title": "Desenvolvedor de software",
@@ -39,3 +36,4 @@ CMD exec gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 AppFile:app
             "url": "https://www.linkedin.com/jobs/view/desenvolvedor-a-backend-java-e-android-at-velis-crm-4265747684?_l=en",
         },
     ]
+    return jobs
