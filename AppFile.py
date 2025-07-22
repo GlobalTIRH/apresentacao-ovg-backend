@@ -62,7 +62,7 @@ def home():
             send_email(nome, email, area)
             
             # Envia uma mensagem de sucesso (qualquer categoria que não seja 'error')
-            flash('Cadastro realizado com sucesso!\nEm breve entraremos em contato.', 'success')
+            flash('Cadastro realizado com sucesso!\nEm breve você receberá o retorno por e-mail.', 'success')
             # Redireciona de volta para a página do formulário para exibir o sucesso
 
             
