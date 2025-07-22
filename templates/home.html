@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Global TI+RH Solutions - Pesquisa de Vagas</title>
+    <link rel="icon" type="image/svg+xml" href="./icons/G.svg" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
@@ -146,8 +147,15 @@
             required
           />
           <label class="text-sm text-gray-700 cursor-pointer" for="terms">
-            Aceito os termos e condições
+            Aceito os termos e condições.
           </label>
+          <a
+            href="{{ url_for('termo') }}"
+            target="_blank"
+            class="text-sm cursor-pointer underline text-blue-600 hover:text-blue-800"
+          >
+            Leia os termos.
+          </a>
         </div>
         <button
           type="submit"
