@@ -2,7 +2,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os as osBib
 import smtplib
-
+import time
+from flask import json
 import requests
 
 def emailbody(user_name, jobs):
@@ -53,6 +54,11 @@ def emailbody(user_name, jobs):
                 <p><a href="mailto:[Contato ou Suporte da Empresa]" style="color: #007bff; text-decoration: none;">[Contato ou Suporte da Empresa]</a></p>
             </td>
         </tr>
+        <tr>
+            <td align="center" style="padding: 20px 0; font-size: 12px; color: #aaa;">
+                <a href="https://global-ovg-apresentacao-743957276592.southamerica-east1.run.app/termos" style="color: #007bff;">Leia os termos.</a>
+            </td>
+        </tr>
     </table>
 </body>
 </html>
@@ -74,8 +80,6 @@ def send_email(nome, email, area_interesse):
         "Content-Type": "application/json",
     }
 
-    """
-    
     url = "https://api.brightdata.com/datasets/v3/trigger"
  
     params = {
@@ -85,103 +89,52 @@ def send_email(nome, email, area_interesse):
         "discover_by": "keyword",
         "limit_per_input": "5",
     }
+    area_interesse = area_interesse.lower().replace("-", " ")
 
-    data = [
-        {"location":"Goiânia","keyword":f"\"+{area_interesse}+\"","experience_level":"Entry level","country":"","time_range":"","job_type":"","remote":"","company":"","location_radius":""},
-    ]
+    data = {
+	    "input": [{"location":"Goiânia","keyword":f"{area_interesse}","time_range":"Past month","experience_level":"","country":"","job_type":"","remote":"","company":"","location_radius":""}],
+	    "custom_output_fields": ["job_title","company_name","job_location","url","job_summary"],
+    }
 
+   
+
+    print("DATA:", data)
 
     response = requests.post(url, headers=headers, params=params, json=data)
     response_json = response.json()
-    """
-
-    # snapshot_id = response_json.get("snapshot_id")
-    snapshot_id = "s_md9a2om72k4gekdgw1"
+    
+    time.sleep(120)
+    snapshot_id = response_json.get("snapshot_id")
+    # snapshot_id = "s_md9a2om72k4gekdgw1"
     get_snapshot_infos = f"https://api.brightdata.com/datasets/v3/snapshot/{snapshot_id}"
     response = requests.get(get_snapshot_infos, headers=headers)
 
+    data = response.text
+    print("RESPONSE:", response.text)
+    data = data.replace("}", "},")
+    data = "[" + data[:-1] + "]"
+    
+    data = data.replace("},]", "}]")
+
     job_listings = []
-    jobs = [
-        {
-            "title": "Desenvolvedor de software",
-            "company": "Conveste Serviços Financeiros",
-            "location": "Goiânia, GO",
-            "description": "Atuar no desenvolvimento de sistemas e aplicações.",
-            "url": "https://www.linkedin.com/jobs/view/desenvolvedor-a-at-conveste-servi%C3%A7os-financeiros-4258371001?_l=en",
-        },
-        {
-            "title": "Desenvolvedor (A) Backend Java E Android",
-            "company": "Velis CRM",
-            "location": "Goiânia, GO",
-            "description": "Atuar no desenvolvimento de soluções backend em Java e Android.",
-            "url": "https://www.linkedin.com/jobs/view/desenvolvedor-a-backend-java-e-android-at-velis-crm-4265747684?_l=en",
-        },
-        {
-            "title": "Desenvolvedor De Back End",
-            "company": "EDJ Digital",
-            "location": "Goiânia, GO",
-            "description": "Atuar no desenvolvimento de soluções backend.",
-            "url": "https://www.linkedin.com/jobs/view/desenvolvedor-de-back-end-at-edj-digital-4261059702?_l=en",
-        },
-        {
-            "title": "Desenvolvedor (A) Front End",
-            "company": "Conveste Serviços Financeiros",
-            "location": "Goiânia, GO",
-            "description": "Atuar no desenvolvimento de interfaces e experiências do usuário.",
-            "url": "https://www.linkedin.com/jobs/view/desenvolvedor-at-conveste-servi%C3%A7os-financeiros-4264692186?_l=en",
-        },
-        {
-            "title": "Desenvolvedor (A) Backend Java E Android",
-            "company": "Velis CRM",
-            "location": "Goiânia, GO",
-            "description": "Atuar no desenvolvimento de soluções backend em Java e Android.",
-            "url": "https://www.linkedin.com/jobs/view/desenvolvedor-a-backend-java-e-android-at-velis-crm-4265747684?_l=en",
-        },
-    ]
+    print("DATA:", data)
+    for item in json.loads(data):
+        description = item.get("job_summary", "")
+        description = description.strip(".")
 
-    """
-    try:
-        if response.status_code == 200:
-            content_type = response.headers.get('content-type', '')
-            if 'application/json' in content_type:
-                data = response.text
-                print(data)
-                data= data.replace('{"url"', ',{"url"')
-                data = f"[{data}]"
-                data= data.replace('[,{"url"', '[{"url"')
-                # print(data)
-                data = json.loads(data)
-                # print(f"Resposta da API: {data}")
+        job_listings.append(
+            {
+                "title": item.get("job_title"),
+                "company": item.get("company_name"),
+                "location": item.get("job_location"),
+                "description": item.get("job_summary"),
+                "url": item.get("url"),
+            }
+        )
 
-                # print(f"Resposta da API: {data}")  
-                for job in data:
-                    # print(type(job))
-                    # print(f"Job: {job}")
+    
 
-                    job_info = {
-                        "title": job.get("title", "N/A"),
-                        "company": job.get("company", "N/A"),
-                        "location": job.get("location", "N/A"),
-                        "description": job.get("description", "N/A"),
-                        "url": job.get("url", "#")
-                    }
-                    job_listings.append(job_info)
-                    break
-            else:
-                print(f"Resposta não é JSON. Content-Type: {content_type}")
-                print(f"Conteúdo: {response.text[:200]}...")
-        else:
-            print(f"Erro na API: {response.text}")
-
-    except Exception as e:
-        print(f"Erro ao processar a resposta: {e}")
-        traceback.print_exc()
-        return
-    """
-
-    print(response)
-
-    body = emailbody(nome, jobs)
+    body = emailbody(nome, job_listings)
     msg.attach(MIMEText(body, "html"))
 
     server = smtplib.SMTP("smtp.gmail.com", 587)
