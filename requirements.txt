@@ -3,7 +3,7 @@ Flask[async]
 Flask-Mail
 Flask-Cors
 # flask-socketio
-# gunicorn
+gunicorn
 # google
 # google-cloud-bigquery
 # google-cloud-aiplatform
