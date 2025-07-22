@@ -56,7 +56,7 @@ def emailbody(user_name, jobs):
         </tr>
         <tr>
             <td align="center" style="padding: 20px 0; font-size: 12px; color: #aaa;">
-                <a href="https://global-ovg-apresentacao-743957276592.southamerica-east1.run.app/termos" style="color: #007bff;">Leia os termos.</a>
+                <a href="https://global-ovg-apresentacao-743957276592.southamerica-east1.run.app/termo" style="color: #007bff;">Leia os termos.</a>
             </td>
         </tr>
     </table>
