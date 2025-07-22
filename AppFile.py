@@ -71,6 +71,16 @@ def home():
     # Se for um acesso normal (método GET), apenas exibe a página
     return render_template('home.html')
 
+@app.route('/termo', methods=['GET'])
+def termo():
+    """
+    Rota para exibir o termo de consentimento.
+    ---
+    responses:
+        200:
+            description: Exibe o termo de consentimento.
+    """
+    return render_template('termo.html')
 
 # -------------------------------------- Main
 if __name__ == "__main__":
