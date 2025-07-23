@@ -139,27 +139,18 @@ def send_email(nome, email, area_interesse):
 	    "custom_output_fields": ["job_title","company_name","job_location","url","job_summary"],
     }
 
-   
-
-    print("DATA:", data)
-
     response = requests.post(url, headers=headers, params=params, json=data)
     response_json = response.json()
 
     snapshot_id = response_json.get("snapshot_id")
-    # snapshot_id = "s_md9a2om72k4gekdgw1"
     get_snapshot_infos = f"https://api.brightdata.com/datasets/v3/snapshot/{snapshot_id}"
     response = requests.get(get_snapshot_infos, headers=headers)
 
-    print("123", response.text)
-    #time.sleep(15)
     while 'Snapshot is not ready yet, try again in 30s' in response.text:
         time.sleep(5)
         response = requests.get(get_snapshot_infos, headers=headers)
-        print(response.text)
 
     data = response.text
-    print("RESPONSE:", response.text)
     if 'Snapshot is empty' in response.text:
         body = emailbody_novacancy(nome)
         msg.attach(MIMEText(body, "html"))
