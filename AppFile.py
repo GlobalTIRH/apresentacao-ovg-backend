@@ -44,49 +44,35 @@ swagger = Swagger(
 # ---------------------------- Rotas
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    # Verifica se o formulário foi enviado (método POST)
     if request.method == 'POST':
         nome = request.form.get('nome')
         email = request.form.get('email')
         telefone = request.form.get('telefone')
         area = request.form.get('area_de_interesse')
-
-        # --- LÓGICA DE VALIDAÇÃO E ENVIO DE MENSAGENS ---
-
-        # Cenário de ERRO: Verifica se algum campo obrigatório está vazio
-        if not nome or not email or not area or not telefone:
+        termo = request.form.get('aceito_termos')
+        
+        if not termo or not nome or not email or not area or not telefone:
             flash('Por favor, preencha todos os campos obrigatórios.', 'error')
 
-        # Cenário de SUCESSO: Se todos os campos estão preenchidos
         else:
             send_email(nome, email, area)
-            
-            # Envia uma mensagem de sucesso (qualquer categoria que não seja 'error')
             flash('Cadastro realizado com sucesso!\nEm breve você receberá o retorno por e-mail.', 'success')
-            # Redireciona de volta para a página do formulário para exibir o sucesso
-
             
         return redirect(url_for('home'))
 
-    # Se for um acesso normal (método GET), apenas exibe a página
     return render_template('home.html')
 
 @app.route('/teste', methods=['GET', 'POST'])
 def home_teste():
-    # Verifica se o formulário foi enviado (método POST)
+ 
     if request.method == 'POST':
         nome = request.form.get('nome')
         email = request.form.get('email')
         telefone = request.form.get('telefone')
-        #area = request.form.get('area_de_interesse')
-
-        # --- LÓGICA DE VALIDAÇÃO E ENVIO DE MENSAGENS ---
-
-        # Cenário de ERRO: Verifica se algum campo obrigatório está vazio
+      
         if not nome or not email or not telefone:
             flash('Por favor, preencha todos os campos obrigatórios.', 'error')
 
-        # Cenário de SUCESSO: Se todos os campos estão preenchidos
         else:
             areas = [
                 "Arquitetura e Urbanismo",
@@ -119,15 +105,10 @@ def home_teste():
             for area in areas:
                 send_email(nome, email, area)
 
-            
-            # Envia uma mensagem de sucesso (qualquer categoria que não seja 'error')
             flash('Cadastro realizado com sucesso!\nEm breve você receberá o retorno por e-mail.', 'success')
-            # Redireciona de volta para a página do formulário para exibir o sucesso
-
             
         return redirect(url_for('home_teste'))
 
-    # Se for um acesso normal (método GET), apenas exibe a página
     return render_template('home_teste.html')
 
 @app.route('/termo', methods=['GET'])
@@ -147,7 +128,6 @@ if __name__ == "__main__":
     from utils.StringToBool import string_to_bool
 
     logger.debug("Iniciando app...")
-    # print(app.url_map)
     
     app.run(
         debug=string_to_bool(osBib.environ.get("DEBUG", "False")),
