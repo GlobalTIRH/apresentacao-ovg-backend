@@ -65,6 +65,49 @@ def emailbody(user_name, jobs):
 """
 
 
+def emailbody_novacancy(user_name):
+    return f"""\
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global TIRH - Ferramenta de Vagas</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <table width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <tr>
+            <td align="center" style="padding: 10px 0;">
+                <img src="https://globaltirh.com.br/site/wp-content/uploads/2019/11/Global-TIRH-logo-V-small.png" alt="Logo Global TI+RH" />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="padding: 10px 0;">
+                <h2 style="color: #333;">Seja bem-vindo, {user_name}!</h2>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="padding: 0px 20px; color: #555;">
+                <h3>Infelizmente não encontramos vagas para o seu perfil.</h3>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="padding: 20px 0; font-size: 14px; color: #777;">
+                <p>Atenciosamente,</p>
+                <p><strong>Equipe Global TI+RH</strong></p>
+                <p><a href="mailto:[Contato ou Suporte da Empresa]" style="color: #007bff; text-decoration: none;">[Contato ou Suporte da Empresa]</a></p>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="padding: 20px 0; font-size: 12px; color: #aaa;">
+                <a href="https://global-ovg-apresentacao-743957276592.southamerica-east1.run.app/termo" style="color: #007bff;">Leia os termos.</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+"""
+
 def send_email(nome, email, area_interesse):
     sender_email = "mateus.silva@globaltirh.com.br"
     receiver_email = email
@@ -102,43 +145,60 @@ def send_email(nome, email, area_interesse):
 
     response = requests.post(url, headers=headers, params=params, json=data)
     response_json = response.json()
-    
-    time.sleep(120)
+
     snapshot_id = response_json.get("snapshot_id")
     # snapshot_id = "s_md9a2om72k4gekdgw1"
     get_snapshot_infos = f"https://api.brightdata.com/datasets/v3/snapshot/{snapshot_id}"
     response = requests.get(get_snapshot_infos, headers=headers)
 
+    print("123", response.text)
+    #time.sleep(15)
+    while 'Snapshot is not ready yet, try again in 30s' in response.text:
+        time.sleep(5)
+        response = requests.get(get_snapshot_infos, headers=headers)
+        print(response.text)
+
     data = response.text
     print("RESPONSE:", response.text)
-    data = data.replace("}", "},")
-    data = "[" + data[:-1] + "]"
-    
-    data = data.replace("},]", "}]")
+    if 'Snapshot is empty' in response.text:
+        body = emailbody_novacancy(nome)
+        msg.attach(MIMEText(body, "html"))
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(sender_email, password)
+        server.send_message(msg)
+        server.quit()
 
-    job_listings = []
-    print("DATA:", data)
-    for item in json.loads(data):
-        description = item.get("job_summary", "")
-        description = description.strip(".")
+    else:
+        data = data.replace("}", "},")
+        data = "[" + data[:-1] + "]"
 
-        job_listings.append(
-            {
-                "title": item.get("job_title"),
-                "company": item.get("company_name"),
-                "location": item.get("job_location"),
-                "description": item.get("job_summary"),
-                "url": item.get("url"),
-            }
-        )
+        data = data.replace("},]", "}]")
 
-    
+        job_listings = []
+        print("DATA:", data)
+        for item in json.loads(data):
+            description = item.get("job_summary", "")
+            description = description.replace("Show more", "")
+            description = description.replace("Show less", "")
 
-    body = emailbody(nome, job_listings)
-    msg.attach(MIMEText(body, "html"))
+            job_listings.append(
+                {
+                    "title": item.get("job_title"),
+                    "company": item.get("company_name"),
+                    "location": item.get("job_location"),
+                    "description": item.get("job_summary"),
+                    "url": item.get("url"),
+                }
+            )
 
-    server = smtplib.SMTP("smtp.gmail.com", 587)
-    server.starttls()
-    server.login(sender_email, password)
-    server.send_message(msg)
-    server.quit()
+
+
+        body = emailbody(nome, job_listings)
+        msg.attach(MIMEText(body, "html"))
+
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(sender_email, password)
+        server.send_message(msg)
+        server.quit()
