@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Global TI+RH Solutions - Pesquisa de Vagas</title>
+    <link rel="icon" type="image/svg+xml" href="./icons/G.svg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-gray-50">
+    <div>
+      <img
+        src="https://globaltirh.com.br/site/wp-content/uploads/2019/11/Global-TIRH-logo-V-small.png"
+        alt="Global TIRH Logo"
+        class="w-44 h-auto mx-auto mt-10"
+      />
+
+      <h4 class="text-center text-lg font-semibold mt-2 text-[#186891]">
+        Global TI+RH Solutions - Pesquisa de Vagas
+      </h4>
+
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="w-full max-w-md mx-auto mt-5">
+        {% for category, message in messages %}
+        <div
+          class="px-4 py-3 rounded relative {% if category == 'error' %}bg-red-100 border border-red-400 text-red-700{% else %}bg-green-100 border border-green-400 text-green-700{% endif %}"
+          role="alert"
+        >
+          <span class="block sm:inline">{{ message }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <form
+        class="flex flex-col items-center mt-10 px-5 gap-5"
+        method="POST"
+        action="{{ url_for('home_teste') }}"
+      >
+        <div class="w-full max-w-md">
+          <label for="nome" class="text-sm text-gray-700 mb-2 block"
+            >Nome</label
+          >
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            placeholder="Nome"
+            class="w-full max-w-md p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+        <div class="w-full max-w-md">
+          <label for="email" class="text-sm text-gray-700 mb-2 block"
+            >Email</label
+          >
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Email"
+            class="w-full max-w-md p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+        <div class="w-full max-w-md">
+          <label for="telefone" class="text-sm text-gray-700 mb-2 block"
+            >Telefone</label
+          >
+          <input
+            type="tel"
+            id="telefone"
+            name="telefone"
+            placeholder="Telefone"
+            class="w-full max-w-md p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div class="flex items-center gap-2 w-full max-w-md">
+          <input
+            type="checkbox"
+            id="terms"
+            name="aceito_termos"
+            class="cursor-pointer"
+            value="true"
+            required
+          />
+          <label class="text-sm text-gray-700 cursor-pointer" for="terms">
+            Aceito os termos e condições.
+          </label>
+          <a
+            href="{{ url_for('termo') }}"
+            target="_blank"
+            class="text-sm cursor-pointer underline text-blue-600 hover:text-blue-800"
+          >
+            Leia os termos.
+          </a>
+        </div>
+        <button
+          type="submit"
+          class="w-full max-w-md mt-5 bg-[#186891] text-white py-2 rounded cursor-pointer hover:bg-[#145a7d]"
+        >
+          Enviar
+        </button>
+      </form>
+
+      <footer
+        class="text-center text-sm text-gray-500 mt-10 fixed bottom-0 md:mb-2 left-0 right-0"
+      >
+        <p>© 2025 Global TI+RH. Todos os direitos reservados.</p>
+        <p>
+          Desenvolvido por
+          <a href="https://globaltirh.com.br" class="text-[#186891] underline">
+            Global TI+RH
+          </a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
