@@ -5,6 +5,9 @@ import smtplib
 import time
 from flask import json
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def emailbody(user_name, jobs):
     job_blocks = ""
@@ -111,7 +114,8 @@ def emailbody_novacancy(user_name):
 def send_email(nome, email, area_interesse):
     sender_email = "mateus.silva@globaltirh.com.br"
     receiver_email = email
-    password = "qemi brbt hcfz wpia"
+    
+    password = osBib.getenv("GOOGLE_EMAIL_PASSWORD")
 
     msg = MIMEMultipart()
     msg["From"] = sender_email
@@ -151,23 +155,16 @@ def send_email(nome, email, area_interesse):
         response = requests.get(get_snapshot_infos, headers=headers)
 
     data = response.text
+    
     if 'Snapshot is empty' in response.text:
         body = emailbody_novacancy(nome)
-        msg.attach(MIMEText(body, "html"))
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.starttls()
-        server.login(sender_email, password)
-        server.send_message(msg)
-        server.quit()
-
     else:
+
         data = data.replace("}", "},")
         data = "[" + data[:-1] + "]"
-
         data = data.replace("},]", "}]")
 
         job_listings = []
-        print("DATA:", data)
         for item in json.loads(data):
             description = item.get("job_summary", "")
             description = description.replace("Show more", "")
@@ -183,13 +180,11 @@ def send_email(nome, email, area_interesse):
                 }
             )
 
-
-
         body = emailbody(nome, job_listings)
-        msg.attach(MIMEText(body, "html"))
 
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.starttls()
-        server.login(sender_email, password)
-        server.send_message(msg)
-        server.quit()
+    msg.attach(MIMEText(body, "html"))
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(sender_email, password)
+    server.send_message(msg)
+    server.quit()
