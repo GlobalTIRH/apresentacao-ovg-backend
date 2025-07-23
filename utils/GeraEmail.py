@@ -135,7 +135,7 @@ def send_email(nome, email, area_interesse):
     area_interesse = area_interesse.lower().replace("-", " ")
 
     data = {
-	    "input": [{"location":"Goiânia","keyword":f"{area_interesse}","time_range":"Past month","experience_level":"","country":"","job_type":"","remote":"","company":"","location_radius":""}],
+	    "input": [{"location":"Goiânia","keyword":f"{area_interesse}","time_range":"Past month","experience_level":"Internship","country":"BR","job_type":"","remote":"","company":"","location_radius":""}],
 	    "custom_output_fields": ["job_title","company_name","job_location","url","job_summary"],
     }
 
