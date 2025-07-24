@@ -51,12 +51,16 @@ def home():
         area = request.form.get('area_de_interesse')
         termo = request.form.get('aceito_termos')
         
+        if not "." in email or not "@" in email:
+            flash('Por favor, insira um e-mail válido.', 'error')
+            return redirect(url_for('home'))
+        
         if not termo or not nome or not email or not area or not telefone:
             flash('Por favor, preencha todos os campos obrigatórios.', 'error')
-
-        else:
-            send_email(nome, email, area)
-            flash('Cadastro realizado com sucesso!\nEm breve você receberá o retorno por e-mail.', 'success')
+            return redirect(url_for('home'))
+        
+        send_email(nome, email, area)
+        flash('Cadastro realizado com sucesso!\nEm breve você receberá o retorno por e-mail.', 'success')
             
         return redirect(url_for('home'))
 
