@@ -8,6 +8,7 @@ import os as osBib
 
 from utils import logger
 from utils.GeraEmail import send_email
+from utils.GerarJson import gerar_json
 
 
 # ---------------------------- Inicializacao
@@ -107,6 +108,7 @@ def home_teste():
                 "Zootecnia"
             ]
             for area in areas:
+                #gerar_json(area)
                 send_email(nome, email, area)
 
             flash('Cadastro realizado com sucesso!\nEm breve você receberá o retorno por e-mail.', 'success')
