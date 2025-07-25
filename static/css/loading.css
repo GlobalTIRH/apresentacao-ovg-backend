@@ -1,0 +1,15 @@
+/* Classe CSS para aplicar loading globalmente quando necessário */
+.loading {
+  cursor: wait !important;
+}
+
+.loading * {
+  cursor: wait !important;
+}
+
+/* Estilo para botões desabilitados durante o loading */
+button:disabled,
+input[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: wait !important;
+}

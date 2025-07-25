@@ -10,14 +10,33 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/loading.css') }}"
+    />
+
+    <script src="{{ url_for('static', filename='js/loading.js') }}"></script>
   </head>
 
   <body class="bg-gray-50">
     <div>
+      <div class="w-full max-w-md mx-auto mt-10 flex">
+        <img
+          src="https://globaltirh.com.br/site/wp-content/uploads/2019/11/Global-TIRH-logo-V-small.png"
+          alt="Global TIRH Logo"
+          class="w-44 h-auto mx-auto mt-10"
+        />
+        <img
+          src="https://www.ovg.org.br/site/wp-content/themes/ovg/img/logo.svg"
+          alt="OVG Logo"
+          class="w-44 h-auto mx-auto mt-2 mb-5"
+        />
+      </div>
       <img
-        src="https://globaltirh.com.br/site/wp-content/uploads/2019/11/Global-TIRH-logo-V-small.png"
-        alt="Global TIRH Logo"
-        class="w-44 h-auto mx-auto mt-10"
+        src="{{ url_for('static', filename='images/google-partner-seeklogo.png') }}"
+        alt="OVG Logo"
+        class="mx-auto w-44 h-auto mt-2 mb-5"
       />
 
       <h4 class="text-center text-lg font-semibold mt-2 text-[#186891]">
@@ -77,6 +96,7 @@
             type="tel"
             id="telefone"
             name="telefone"
+            onkeyup="mascaraFone(event)"
             placeholder="Telefone"
             class="w-full max-w-md p-2 border border-gray-300 rounded"
           />
@@ -165,9 +185,7 @@
         </button>
       </form>
 
-      <footer
-        class="text-center text-sm text-gray-500 mt-10 fixed bottom-0 md:mb-2 left-0 right-0"
-      >
+      <footer class="text-center text-sm text-gray-500 mt-10">
         <p>© 2025 Global TI+RH. Todos os direitos reservados.</p>
         <p>
           Desenvolvido por
