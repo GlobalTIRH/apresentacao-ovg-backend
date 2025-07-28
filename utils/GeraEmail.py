@@ -6,7 +6,7 @@ import time
 from flask import json
 import requests
 from dotenv import load_dotenv
-
+from utils.GerarResumo import gerar_resumo
 load_dotenv()
 
 def emailbody(user_name, jobs):
@@ -138,8 +138,13 @@ def send_email(nome, email, area_interesse):
     }
     area_interesse = area_interesse.lower().replace("-", " ")
 
+    # data = {
+	#     "input": [{"location":"Goiânia","keyword":f"{area_interesse}","time_range":"Past month","experience_level":"Internship","country":"BR","job_type":"","remote":"","company":"","location_radius":""}],
+	#     "custom_output_fields": ["job_title","company_name","job_location","url","job_summary"],
+    # }
+
     data = {
-	    "input": [{"location":"Goiânia","keyword":f"{area_interesse}","time_range":"Past month","experience_level":"Internship","country":"BR","job_type":"","remote":"","company":"","location_radius":""}],
+	    "input": [{"location":"Goiânia","keyword":f"{area_interesse}","time_range":"Past month","experience_level":"","country":"BR","job_type":"","remote":"","company":"","location_radius":""}],
 	    "custom_output_fields": ["job_title","company_name","job_location","url","job_summary"],
     }
 
@@ -179,7 +184,9 @@ def send_email(nome, email, area_interesse):
                     "url": item.get("url"),
                 }
             )
-
+        
+        resumo = gerar_resumo(job_listings)
+        print(f"Resumo gerado: {resumo}")
         body = emailbody(nome, job_listings)
 
     msg.attach(MIMEText(body, "html"))
