@@ -6,7 +6,7 @@ Melhorias OVG [KRISTIANE]
 
 1. [x] Colocar máscara no campo telefone
 2. [x] Se for possível, mudar o ícone do mouse para ampulheta mostrando que está processando depois que clica no Enviar.
-3. [ ] Email ainda sendo enviado pelo Mateus
+3. [ ] Email ainda sendo enviado pelo Mateus (CONFIRMAR COM O RODRIGO)
 4. [x] O campo email não está fazendo todas as validações, exemplo: “teste@hot” aceitou esse email que é inválido
 5. [x] Priorizar as vagas de estágio
 6. [x] Integrar com IA e ver com os dados das vagas os requisitos mais comuns entre as vagas e o que o candidato precisa intensificar nos seus treinamentos
