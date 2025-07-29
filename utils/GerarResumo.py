@@ -11,18 +11,18 @@ def gerar_resumo(vagas):
         str: Um resumo das principais habilidades e requisitos encontrados nas vagas.
     """
 
-    prompt = "Você é um especialista em recrutamento e seleção. Sua tarefa é analisar as seguintes vagas e gerar um resumo das principais habilidades e requisitos necessários para os candidatos:\n\n"
-    
+    # prompt = "Você é um especialista em recrutamento e seleção. Sua tarefa é analisar as seguintes vagas e gerar um resumo das principais habilidades e requisitos necessários para os candidatos:\n\n"
+    path = "prompts/recrutador.md"
+    prompt = open(path, "r").read()
+    prompt += "\n\n# Entradas:\n"
+
     for vaga in vagas:
+        vaga_summary = vaga.get("description", "")
+        if vaga_summary:
+            prompt += f"- {vaga_summary}\n"
         
-        titulos = vaga.get("title", [])
-        descricoes = vaga.get("description", [])
-        
-        if titulos:
-            prompt += f"Títulos: {', '.join(titulos)}\n"
-        if descricoes:
-            prompt += f"Descrições: {', '.join(descricoes)}\n"
-
+       
     response = call_gemini(prompt)
-
+    response = response.replace("**", "")
+    response = response.replace("*", "")
     return response
