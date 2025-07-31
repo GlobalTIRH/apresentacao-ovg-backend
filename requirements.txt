@@ -4,10 +4,10 @@ Flask-Mail
 Flask-Cors
 # flask-socketio
 # gunicorn
-# google
+google
 # google-cloud-bigquery
-# google-cloud-aiplatform
-# google-oauth
+google-cloud-aiplatform
+google-oauth
 # google-cloud-bigquery-connection
 # google-cloud-bigquery-storage
 # cloud-sql-python-connector[asyncpg]

@@ -6,19 +6,19 @@ import time
 from flask import json
 import requests
 from dotenv import load_dotenv
-
+from utils.GerarResumo import gerar_resumo
 load_dotenv()
 
-def emailbody(user_name, jobs):
+def emailbody(user_name, jobs, resumo):
     job_blocks = ""
     for job in jobs:
         job_blocks += f"""
         <tr>
-            <td style="padding: 10px 20px; color: #333; border-bottom: 1px solid #eee;">
-                <h3 style="margin-bottom: 5px;">{job.get("title", "N/A")}</h3>
-                <p style="margin: 0;"><strong>Empresa:</strong> {job.get("company", "N/A")}</p>
-                <p style="margin: 0;"><strong>Localização:</strong> {job.get("location", "N/A")}</p>
-                <p style="margin: 10px 0;">{job.get("description", "N/A")}</p>
+            <td style="padding: 10px 20px; color: #333; border-bottom: 1px solid #eee; text-align: justify;">
+                <h3 style="margin-bottom: 5px; text-align: justify;">{job.get("title", "N/A")}</h3>
+                <p style="margin: 0; text-align: justify;"><strong>Empresa:</strong> {job.get("company", "N/A")}</p>
+                <p style="margin: 0; text-align: justify;"><strong>Localização:</strong> {job.get("location", "N/A")}</p>
+                <p style="margin: 10px 0; text-align: justify;">{job.get("description", "N/A")}</p>
                 <p><a href="{job.get("url", "#")}" style="background-color: #007bff; color: #ffffff; padding: 8px 16px; text-decoration: none; border-radius: 5px;">Ver Vaga</a></p>
             </td>
         </tr>
@@ -42,6 +42,12 @@ def emailbody(user_name, jobs):
         <tr>
             <td align="center" style="padding: 10px 0;">
                 <h2 style="color: #333;">Seja bem-vindo, {user_name}!</h2>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="padding: 0px 20px; color: #555;">
+                <h3>Resumo das vagas encontradas</h3>
+                <p style="text-align: justify;">{resumo}</p>
             </td>
         </tr>
         <tr>
@@ -112,7 +118,7 @@ def emailbody_novacancy(user_name):
 """
 
 def send_email(nome, email, area_interesse):
-    sender_email = "mateus.silva@globaltirh.com.br"
+    sender_email = "contato@globaltirh.com.br"
     receiver_email = email
     
     password = osBib.getenv("GOOGLE_EMAIL_PASSWORD")
@@ -138,8 +144,13 @@ def send_email(nome, email, area_interesse):
     }
     area_interesse = area_interesse.lower().replace("-", " ")
 
+    # data = {
+	#     "input": [{"location":"Goiânia","keyword":f"{area_interesse}","time_range":"Past month","experience_level":"Internship","country":"BR","job_type":"","remote":"","company":"","location_radius":""}],
+	#     "custom_output_fields": ["job_title","company_name","job_location","url","job_summary"],
+    # }
+
     data = {
-	    "input": [{"location":"Goiânia","keyword":f"{area_interesse}","time_range":"Past month","experience_level":"Internship","country":"BR","job_type":"","remote":"","company":"","location_radius":""}],
+	    "input": [{"location":"Goiânia","keyword":f"{area_interesse}","time_range":"Past month","experience_level":"","country":"BR","job_type":"","remote":"","company":"","location_radius":""}],
 	    "custom_output_fields": ["job_title","company_name","job_location","url","job_summary"],
     }
 
@@ -167,20 +178,20 @@ def send_email(nome, email, area_interesse):
         job_listings = []
         for item in json.loads(data):
             description = item.get("job_summary", "")
-            description = description.replace("Show more", "")
-            description = description.replace("Show less", "")
+            description = description.replace(" Show more Show less", ".")
 
             job_listings.append(
                 {
                     "title": item.get("job_title"),
                     "company": item.get("company_name"),
                     "location": item.get("job_location"),
-                    "description": item.get("job_summary"),
+                    "description": description,
                     "url": item.get("url"),
                 }
             )
-
-        body = emailbody(nome, job_listings)
+        
+        resumo = gerar_resumo(job_listings)
+        body = emailbody(nome, job_listings, resumo)
 
     msg.attach(MIMEText(body, "html"))
     server = smtplib.SMTP("smtp.gmail.com", 587)
