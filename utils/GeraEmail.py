@@ -118,7 +118,7 @@ def emailbody_novacancy(user_name):
 """
 
 def send_email(nome, email, area_interesse):
-    sender_email = "mateus.silva@globaltirh.com.br"
+    sender_email = "contato@globaltirh.com.br"
     receiver_email = email
     
     password = osBib.getenv("GOOGLE_EMAIL_PASSWORD")
