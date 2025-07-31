@@ -20,3 +20,9 @@ Complementando [GUSTAVO]:
 2. [x] Inserir logo da OVG tb
 3. [x] fazer alinhamento justificado no corpo do texto do e-mail
 4. [x] criar resumo no início do e-mail com “Características recorrentes das vagas” e pontuar 3-4 habilidades recorrentes existentes nas vagas apresentadas
+
+Faltantes:
+
+1. [] Adicionar a base de dados para vagas
+   1.1 [x] Código para criação das base de dados
+   1.2 [ ] Começar a usar a vagas da base de dados
